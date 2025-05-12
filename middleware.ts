@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const isAuth = request.cookies.get('token')
+  const token = request.cookies.get('token')
+  const url = request.nextUrl
 
-  if (!isAuth && request.nextUrl.pathname.startsWith('/(protected)')) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  if (!token && url.pathname.startsWith('/admin')) {
+    return NextResponse.redirect(new URL('/public/login', request.url))
   }
 
   return NextResponse.next()
